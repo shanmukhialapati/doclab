@@ -113,7 +113,7 @@ export default function Index() {
         if (decoded.verified === false) {
           Alert.alert(
             "Verification Required",
-            "Please verify your email first."
+            "Please verify your email first.",
           );
           window.alert("Please verify your email first.");
 
@@ -142,7 +142,7 @@ export default function Index() {
           phnno: formData.number,
           password: formData.password,
           role: "USER",
-        }
+        },
       );
 
       if (response.status === 200 || response.status === 201) {
@@ -197,14 +197,14 @@ export default function Index() {
         {
           email: currentEmail,
           otp: currentOtp,
-        }
+        },
       );
 
       if (response.status === 200) {
         if (isVerifyingOtp) {
           Alert.alert(
             "Success",
-            "Account verified successfully! You can now login."
+            "Account verified successfully! You can now login.",
           );
           setIsVerifyingOtp(false);
           setIsRegistering(false);
@@ -234,7 +234,7 @@ export default function Index() {
 
     try {
       const response = await axios.post(
-        `http://192.168.0.236:8080/auth/forgot-password?email=${forgotEmail}`
+        `http://192.168.0.236:8080/auth/forgot-password?email=${forgotEmail}`,
       );
 
       if (response.status === 200) {
@@ -262,7 +262,7 @@ export default function Index() {
           {
             email: forgotEmail,
             otp: resetData.otp,
-          }
+          },
         );
 
         if (response.status === 200) {
@@ -281,9 +281,9 @@ export default function Index() {
       }
 
       const url = `${BASE_URL}/auth/reset-password?email=${encodeURIComponent(
-        forgotEmail
+        forgotEmail,
       )}&newPassword=${encodeURIComponent(
-        resetData.newPassword
+        resetData.newPassword,
       )}&confirmPassword=${encodeURIComponent(resetData.confirmPassword)}`;
 
       const response = await axios.post(url);
@@ -364,8 +364,8 @@ export default function Index() {
                 {isVerifyingOtp
                   ? "Verify OTP"
                   : isRegistering
-                  ? "Register"
-                  : "Login"}
+                    ? "Register"
+                    : "Login"}
               </Text>
               <ScrollView showsVerticalScrollIndicator={false}>
                 {isVerifyingOtp ? (

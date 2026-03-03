@@ -75,7 +75,6 @@ export default function DepartmentDetails() {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Improved grid layout for web vs mobile
   const numColumns = isWeb ? 3 : 1;
 
   useEffect(() => {
@@ -84,7 +83,7 @@ export default function DepartmentDetails() {
         setLoading(true);
         const response = await axios.get(
           `http://192.168.0.133:8080/api/departments/hospital/${id}`,
-          { timeout: 4000 }
+          { timeout: 4000 },
         );
         setDepartments(response.data);
       } catch (error) {

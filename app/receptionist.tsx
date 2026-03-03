@@ -6,8 +6,7 @@
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { LinearGradient } from "expo-linear-gradient";
 // import { router } from "expo-router";
-// import { jwtDecode } from "jwt-decode";
-// import React, { useEffect, useState } from "react";
+// import { default as React, useEffect, useState } from "react";
 // import {
 //   Image,
 //   Platform,
@@ -18,28 +17,18 @@
 // } from "react-native";
 // import { SafeAreaView } from "react-native-safe-area-context";
 
-// interface DecodedToken {
-//   role: string;
-//   [key: string]: any;
-// }
-
 // const ReceptionistLanding = () => {
 //   const isWeb = Platform.OS === "web";
-//   const [userRole, setUserRole] = useState<string | null>(null);
+//   const [role, setRole] = useState<string | null>(null);
 
 //   useEffect(() => {
-//     const fetchRole = async () => {
-//       try {
-//         const token = await AsyncStorage.getItem("AccessToken");
-//         if (token) {
-//           const decoded = jwtDecode<DecodedToken>(token);
-//           setUserRole(decoded.role);
-//         }
-//       } catch (error) {
-//         console.error("Error fetching user role:", error);
-//       }
+//     const getRole = async () => {
+//       // FIX: Match the key name used in the Index page ("userRole")
+//       const storedRole = await AsyncStorage.getItem("userRole");
+//       console.log("Detected Role:", storedRole); // Add this to debug in your console
+//       setRole(storedRole);
 //     };
-//     fetchRole();
+//     getRole();
 //   }, []);
 
 //   const features = [
@@ -51,7 +40,7 @@
 
 //   const handleLogout = async () => {
 //     try {
-//       await AsyncStorage.removeItem("AccessToken");
+//       await AsyncStorage.multiRemove(["AccessToken", "UserRole"]);
 //       router.replace("/");
 //     } catch (e) {
 //       console.error("Logout failed", e);
@@ -63,9 +52,7 @@
 //       <LinearGradient colors={["#f0fdfa", "#ffffff"]} className="flex-1">
 //         {/* TOP HEADER */}
 //         <View
-//           className={`absolute z-10 flex-row items-center justify-between w-full ${
-//             isWeb ? "px-10 py-8" : "px-5 py-4"
-//           }`}
+//           className={`absolute z-10 flex-row items-center justify-between w-full ${isWeb ? "px-10 py-8" : "px-5 py-4"}`}
 //         >
 //           <View className="flex-row items-center">
 //             <View className="bg-teal-600 p-2 rounded-lg">
@@ -79,7 +66,7 @@
 //           <TouchableOpacity
 //             onPress={handleLogout}
 //             className="flex-row items-center bg-white px-4 py-2 rounded-full border border-teal-100 shadow-sm"
-//           >
+
 //             <FontAwesome name="sign-out" size={16} color="#0d9488" />
 //             <Text className="ml-2 text-teal-600 font-bold text-xs uppercase tracking-wider">
 //               Logout
@@ -92,17 +79,13 @@
 //           contentContainerStyle={{ flexGrow: 1 }}
 //         >
 //           <View
-//             className={`flex-1 ${
-//               isWeb ? "flex-row px-20 py-32" : "flex-col p-6 pt-24"
-//             } items-center justify-between`}
+//             className={`flex-1 ${isWeb ? "flex-row px-20 py-32" : "flex-col p-6 pt-24"} items-center justify-between`}
 //           >
 //             {/* LEFT SECTION */}
 //             <View className={`${isWeb ? "w-1/2" : "w-full mb-10"}`}>
 //               <View className="bg-teal-100 self-start px-3 py-1 rounded-md mb-4">
 //                 <Text className="text-teal-700 font-bold uppercase tracking-widest text-[10px]">
-//                   {userRole === "DOCTOR"
-//                     ? "Doctor Dashboard"
-//                     : "Receptionist Dashboard"}
+//                   Healthcare Management System
 //                 </Text>
 //               </View>
 
@@ -112,64 +95,61 @@
 //               </Text>
 
 //               <View className="gap-y-4">
-//                 {/* ROLE BASED BUTTONS */}
-//                 {(userRole === "RECEIPTIOINIST" ||
-//                   userRole === "RECEPTIONIST") && (
-//                   <View className="flex-row flex-wrap gap-4">
+//                 {/* ALL BUTTONS SHOWN REGARDLESS OF ROLE */}
+//                 <View className="flex-row flex-wrap gap-4">
+//                   {role === "RECEPTIONIST" && (
+//                     <>
+//                       <TouchableOpacity
+//                         onPress={() =>
+//                           router.push("/(receptionist)/receptionisthome")
+//                         }
+//                         className="flex-row items-center bg-teal-600 px-6 py-4 rounded-2xl shadow-lg"
+//                       >
+//                         <Ionicons name="calendar" size={20} color="#fff" />
+//                         <Text className="ml-3 text-white font-bold">
+//                           Manage Appointments
+//                         </Text>
+//                       </TouchableOpacity>
+
+//                       <TouchableOpacity
+//                         onPress={() =>
+//                           router.push("/(receptionist)/receptionDoctor")
+//                         }
+//                         className="flex-row items-center bg-white border-2 border-teal-600 px-6 py-4 rounded-2xl shadow-sm"
+//                       >
+//                         <FontAwesome name="user-md" size={20} color="#0d9488" />
+//                         <Text className="ml-3 text-teal-600 font-bold">
+//                           Doctor Directory
+//                         </Text>
+//                       </TouchableOpacity>
+//                     </>
+//                   )}
+
+//                   {/* DOCTOR ONLY BUTTONS */}
+//                   {role === "DOCTOR" && (
 //                     <TouchableOpacity
-//                       onPress={() =>
-//                         router.push("/(receptionist)/receptionisthome")
-//                       }
-//                       className="flex-row items-center bg-teal-600 px-6 py-4 rounded-2xl shadow-lg"
+//                       onPress={() => router.push("/(hospital)/hospitalhome")}
+//                       className="flex-row items-center bg-teal-800 px-6 py-4 rounded-2xl shadow-lg"
 //                     >
-//                       <Ionicons name="calendar" size={20} color="#fff" />
+//                       <MaterialCommunityIcons
+//                         name="stethoscope"
+//                         size={20}
+//                         color="white"
+//                       />
 //                       <Text className="ml-3 text-white font-bold">
-//                         Manage Appointments
-//                       </Text>
-//                     </TouchableOpacity>
-
-//                     <TouchableOpacity
-//                       onPress={() =>
-//                         router.push("/(receptionist)/receptionDoctor")
-//                       }
-//                       className="flex-row items-center bg-white border-2 border-teal-600 px-6 py-4 rounded-2xl"
-//                     >
-//                       <FontAwesome name="user-md" size={20} color="#0d9488" />
-//                       <Text className="ml-3 text-teal-600 font-bold">
-//                         Doctor Directory
-//                       </Text>
-//                     </TouchableOpacity>
-//                   </View>
-//                 )}
-
-//                 {userRole === "DOCTOR" && (
-//                   <TouchableOpacity
-//                     onPress={() => router.push("/(hospital)/hospitalhome")}
-//                     className="flex-row items-center bg-teal-600 px-6 py-4 rounded-2xl shadow-lg"
-//                   >
-//                     <MaterialCommunityIcons
-//                       name="stethoscope"
-//                       size={22}
-//                       color="white"
-//                     />
-//                     <View className="ml-4">
-//                       <Text className="text-white font-bold">
 //                         Doctor's Portal
 //                       </Text>
-//                       <Text className="text-teal-100 text-xs italic">
-//                         View your appointments here →
-//                       </Text>
-//                     </View>
-//                   </TouchableOpacity>
-//                 )}
+//                     </TouchableOpacity>
+//                   )}
+//                 </View>
 
 //                 {/* --- IMAGE CARD BELOW BUTTONS --- */}
 //                 <View
 //                   className={`mt-8 bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100
-//   ${isWeb ? "max-w-30 min-h-[520px]" : "max-w-md"}`}
+//                   ${isWeb ? "max-w-30 min-h-[520px]" : "max-w-md"}`}
 //                 >
 //                   <Image
-//                     // source={require("../assets/images/")}
+//                     source={require("../assets/images/hospital2.png")}
 //                     resizeMode="cover"
 //                     style={{
 //                       width: "100%",
@@ -200,7 +180,6 @@
 //               </View>
 //             </View>
 
-//             {/* RIGHT SECTION - FEATURES */}
 //             <View className={`${isWeb ? "w-[400px]" : "w-full"}`}>
 //               <View className="bg-white p-8 rounded-[40px] border border-gray-100 shadow-xl w-full">
 //                 <LinearGradient
