@@ -33,6 +33,10 @@ When you're ready, run:
 npm run reset-project
 ```
 
+## 🎥 Project Demo
+
+[Click here to watch demo](./demo.mp4)
+
 This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
 ## Learn more
